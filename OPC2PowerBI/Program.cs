@@ -32,7 +32,7 @@ namespace OPC2PowerBI
 {
     class Program
     {
-        static public string Version = "OPC2PowerBI Version 0.1 - Copyright 2019 - Ricardo L. Olsen";
+        static public string Version = "OPC2PowerBI Version 0.2 - Copyright 2019 - Ricardo L. Olsen";
         static public string ConfigFile = "opc2powerbi.conf";
         static public bool logevent = true;
         static public bool logread = true;
@@ -61,6 +61,7 @@ namespace OPC2PowerBI
         {
             public string opc_url;
             public string opc_server_name;
+            public string certificate_file;
             public List<OPC_entry> entries;
             public int read_period;
             public int is_opc_ua;
@@ -77,7 +78,7 @@ namespace OPC2PowerBI
             public Hylasoft.Opc.Common.Quality quality;
         }
 
-        static void ProcessUa(String URI, List<OPC_entry> entries, int readperiod)
+        static void ProcessUa(String URI, List<OPC_entry> entries, int readperiod, string certfile)
         {
             CultureInfo ci = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentCulture = ci;
@@ -90,8 +91,18 @@ namespace OPC2PowerBI
                     var options = new UaClientOptions
                     {
                         SessionTimeout = 60000,
-                        SessionName = "OSHMI client (h-opc)"
+                        SessionName = "OPC2PowerBI client (h-opc)"                        
                     };
+                    if (certfile != "")
+                    {
+                        if (File.Exists(certfile))
+                        {
+                            options.ApplicationCertificate = new System.Security.Cryptography.X509Certificates.X509Certificate2();
+                            options.ApplicationCertificate.Import(certfile);
+                        }
+                        else
+                            Console.WriteLine("Certificate file not found: " + certfile);
+                    }
 
                     using (var client = new UaClient(new Uri(URI), options))
                     {
@@ -936,9 +947,9 @@ namespace OPC2PowerBI
                                 else
                                     stype = entry.opc_type.ToLower();
 
-                                double val = 0;
-                                string sval = "";
-                                Hylasoft.Opc.Common.Quality quality = Hylasoft.Opc.Common.Quality.Bad;
+                                //double val = 0;
+                                //string sval = "";
+                                //Hylasoft.Opc.Common.Quality quality = Hylasoft.Opc.Common.Quality.Bad;
 
                                 switch (stype)
                                 {
@@ -1310,7 +1321,6 @@ namespace OPC2PowerBI
             CultureInfo ci = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentCulture = ci;
             Thread.CurrentThread.CurrentUICulture = ci;
-            string connstr = "";
             string servicename = "";
             int port = 8080;
 
@@ -1348,10 +1358,14 @@ namespace OPC2PowerBI
                         Console.WriteLine("NEW UA SERVER");
                         cnt_entries = -1;
                         cnt_servers++;
+                        string certfile = "";
+                        if (result.Count() >= 4)
+                            certfile = result[3].Trim();
                         OPC_server opcserv = new OPC_server
                         {
                             opc_server_name = (result[2].Trim() == "") ? result[0].Trim() : result[2].Trim(),
                             opc_url = result[0].Trim(),
+                            certificate_file = certfile,
                             read_period = System.Convert.ToInt32(result[1].Trim()),
                             is_opc_ua = 1,
                             entries = new List<OPC_entry>()
@@ -1406,7 +1420,7 @@ namespace OPC2PowerBI
             {
                 if (srv.is_opc_ua != 0)
                 {
-                    Thread t = new Thread(() => ProcessUa(srv.opc_url, srv.entries, srv.read_period));
+                    Thread t = new Thread(() => ProcessUa(srv.opc_url, srv.entries, srv.read_period, srv.certificate_file));
                     t.Start();
                 }
                 else

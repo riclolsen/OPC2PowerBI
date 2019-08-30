@@ -23,8 +23,8 @@ Example of config file:
 	
 	# OPC SERVERS
 
-	#  OPC_UA_URL,                   READ_INTERVAL_IN_SECONDS,  SERVER_NAME
-	opc.tcp://opcuaserver.com:48484, 10,                        Server1
+	#  OPC_UA_URL,                   READ_INTERVAL_IN_SECONDS,  SERVER_NAME, CERTIFICATE_FILE_PATH
+	opc.tcp://opcuaserver.com:48484, 10,                        Server1,     certfile.cer
 
 	# OPC TAGS TO READ FROM THE SERVER
 
