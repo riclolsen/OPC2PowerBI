@@ -32,7 +32,7 @@ namespace OPC2PowerBI
 {
     class Program
     {
-        static public string Version = "OPC2PowerBI Version 0.2 - Copyright 2019 - Ricardo L. Olsen";
+        static public string Version = "OPC2PowerBI Version 0.3 - Copyright 2019 - Ricardo L. Olsen";
         static public string ConfigFile = "opc2powerbi.conf";
         static public bool logevent = true;
         static public bool logread = true;
@@ -62,6 +62,7 @@ namespace OPC2PowerBI
             public string opc_url;
             public string opc_server_name;
             public string certificate_file;
+            public string certificate_password;
             public List<OPC_entry> entries;
             public int read_period;
             public int is_opc_ua;
@@ -78,7 +79,7 @@ namespace OPC2PowerBI
             public Hylasoft.Opc.Common.Quality quality;
         }
 
-        static void ProcessUa(String URI, List<OPC_entry> entries, int readperiod, string certfile)
+        static void ProcessUa(String URI, List<OPC_entry> entries, int readperiod, string appname, string certfile, string cert_password)
         {
             CultureInfo ci = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentCulture = ci;
@@ -91,14 +92,19 @@ namespace OPC2PowerBI
                     var options = new UaClientOptions
                     {
                         SessionTimeout = 60000,
-                        SessionName = "OPC2PowerBI client (h-opc)"                        
+                        SessionName = "OPC2PowerBI client (h-opc)",
+                        ApplicationName = appname
                     };
                     if (certfile != "")
                     {
                         if (File.Exists(certfile))
                         {
-                            options.ApplicationCertificate = new System.Security.Cryptography.X509Certificates.X509Certificate2();
-                            options.ApplicationCertificate.Import(certfile);
+                            options.ApplicationCertificate = 
+                                new System.Security.Cryptography.X509Certificates.X509Certificate2(
+                                        certfile, 
+                                        cert_password, 
+                                        System.Security.Cryptography.X509Certificates.X509KeyStorageFlags.MachineKeySet
+                                        );
                         }
                         else
                             Console.WriteLine("Certificate file not found: " + certfile);
@@ -1358,14 +1364,17 @@ namespace OPC2PowerBI
                         Console.WriteLine("NEW UA SERVER");
                         cnt_entries = -1;
                         cnt_servers++;
-                        string certfile = "";
+                        string certfile = "", certpasswd = "";
                         if (result.Count() >= 4)
                             certfile = result[3].Trim();
+                        if (result.Count() >= 5)
+                            certpasswd = result[4].Trim();
                         OPC_server opcserv = new OPC_server
                         {
                             opc_server_name = (result[2].Trim() == "") ? result[0].Trim() : result[2].Trim(),
                             opc_url = result[0].Trim(),
                             certificate_file = certfile,
+                            certificate_password = certpasswd,
                             read_period = System.Convert.ToInt32(result[1].Trim()),
                             is_opc_ua = 1,
                             entries = new List<OPC_entry>()
@@ -1420,7 +1429,7 @@ namespace OPC2PowerBI
             {
                 if (srv.is_opc_ua != 0)
                 {
-                    Thread t = new Thread(() => ProcessUa(srv.opc_url, srv.entries, srv.read_period, srv.certificate_file));
+                    Thread t = new Thread(() => ProcessUa(srv.opc_url, srv.entries, srv.read_period,srv.opc_server_name, srv.certificate_file, srv.certificate_password));
                     t.Start();
                 }
                 else
@@ -1432,7 +1441,7 @@ namespace OPC2PowerBI
 
             var ws = new WebServer(SendResponse, new string[] { "http://127.0.0.1:" + port + "/" + servicename + "/" });
             ws.Run();
-            Console.WriteLine("A simple webserver. Press a key to quit.");
+            Console.WriteLine("OPC2PowerBI webserver running. Press a key to quit.");
             Console.ReadKey();
             ws.Stop();
             // Console.ReadKey();
