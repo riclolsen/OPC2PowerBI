@@ -32,7 +32,7 @@ namespace OPC2PowerBI
 {
     class Program
     {
-        static public string Version = "OPC2PowerBI Version 0.3 - Copyright 2019 - Ricardo L. Olsen";
+        static public string Version = "OPC2PowerBI Version 0.4 - Copyright 2019-2020 - Ricardo L. Olsen";
         static public string ConfigFile = "opc2powerbi.conf";
         static public bool logevent = true;
         static public bool logread = true;
