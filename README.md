@@ -6,7 +6,7 @@ It is simple to configure, the opc2powerbi.conf file is self explained, it must 
 
 After configuring OPC servers and tags, create a new OData Feed data source in PowerBI and type http://127.0.0.1:8080/odata in the URL field.
 
-Data refreshs must be forced manually or configured as periodic (feature that will be available soon for PowerBI).
+Data refreshs must be forced manually. As far as I know OData data source does not support periodic updates (DirectQuery) in PowerBI.
 
 The code is written in C# and it uses the h-OPC library for C#.
 
