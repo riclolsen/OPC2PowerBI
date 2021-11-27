@@ -10,6 +10,8 @@ Data refreshs must be forced manually. As far as I know OData data source does n
 
 The code is written in C# and it uses the h-OPC library for C#.
 
+_Warning: The h-opc library is unmantained legacy and is known to have problems to enable OPC connections using certificates_.
+
 Requires the .NET fremework 4.6 or later.
 
 Requires also the forked h-opc library https://github.com/riclolsen/h-opc.
