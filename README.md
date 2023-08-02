@@ -12,7 +12,7 @@ The code is written in C# and it uses the h-OPC library for C#.
 
 _Warning: The h-opc library is unmantained legacy and is known to have problems to enable OPC connections using certificates_.
 
-Requires the .NET 6.0 runtime or later.
+Requires the .NET 6.0 runtime.
 
 Executable binaries are available for download in the Releases section.
 
