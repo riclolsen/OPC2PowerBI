@@ -2,7 +2,7 @@
 OPC2PowerBI
 OPC UA / DA --> Power BI (OData v4 JSON)
 
-	Copyright 2019 - Ricardo L. Olsen
+	Copyright 2019-2023 - Ricardo L. Olsen
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -15,15 +15,10 @@ OPC UA / DA --> Power BI (OData v4 JSON)
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-using System;
-using System.Threading;
 using Hylasoft.Opc.Ua;
-using System.Collections.Generic;
 using Hylasoft.Opc.Da;
 using System.Collections.Concurrent;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 using System.Web;
@@ -32,7 +27,7 @@ namespace OPC2PowerBI
 {
     class Program
     {
-        static public string Version = "OPC2PowerBI Version 0.4 - Copyright 2019-2020 - Ricardo L. Olsen";
+        static public string Version = "OPC2PowerBI Version 0.5 - Copyright 2019-2023 - Ricardo L. Olsen";
         static public string ConfigFile = "opc2powerbi.conf";
         static public bool logevent = true;
         static public bool logread = true;
@@ -112,8 +107,10 @@ namespace OPC2PowerBI
 
                     using (var client = new UaClient(new Uri(URI), options))
                     {
+                        Console.WriteLine("Connecting UA " + URI);
                         client.Connect();
-                        Console.WriteLine("Connect UA " + URI);
+                                         
+                        Console.WriteLine("UA " + URI + " " + client.Status) ;
 
                         foreach (OPC_entry entry in entries)
                         {
@@ -147,7 +144,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + sval);
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + sval);
                                         });
                                     }
                                     break;
@@ -168,7 +165,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value.ToString("G", CultureInfo.CreateSpecificCulture("en-US")));
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value.ToString("G", CultureInfo.CreateSpecificCulture("en-US")));
                                         });
                                     }
                                     break;
@@ -188,7 +185,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value.ToString("G", CultureInfo.CreateSpecificCulture("en-US")));
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value.ToString("G", CultureInfo.CreateSpecificCulture("en-US")));
                                         });
                                     }
                                     break;
@@ -209,7 +206,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + sval);
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + sval);
                                         });
                                     }
                                     break;
@@ -229,7 +226,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
                                         });
                                     }
                                     break;
@@ -249,7 +246,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
                                         });
                                     }
                                     break;
@@ -269,7 +266,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
                                         });
                                     }
                                     break;
@@ -289,7 +286,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
                                         });
                                     }
                                     break;
@@ -310,7 +307,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
                                         });
                                     }
                                     break;
@@ -331,7 +328,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
                                         });
                                     }
                                     break;
@@ -351,7 +348,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
                                         });
                                     }
                                     break;
@@ -371,7 +368,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
                                         });
                                     }
                                     break;
@@ -406,7 +403,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
                                         });
                                     }
                                     break;
@@ -428,7 +425,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value.ToString());
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value.ToString());
                                         });
                                     }
                                     break;
@@ -463,7 +460,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "float":
@@ -481,7 +478,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "double":
@@ -498,7 +495,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "system.decimal":
@@ -514,7 +511,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "byte":
@@ -531,7 +528,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "sbyte":
@@ -548,7 +545,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "int16":
@@ -565,7 +562,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "uint16":
@@ -582,7 +579,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "integer":
@@ -600,7 +597,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "statuscode":
@@ -618,7 +615,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "int64":
@@ -635,7 +632,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "uint64":
@@ -652,7 +649,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "expandednodeid":
@@ -684,7 +681,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "time":
@@ -704,11 +701,11 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     default:
-                                        if (logread) Console.WriteLine("READ UNSUPPORTED TYPE: " + URI + " " + entry.opc_path + " " + stype);
+                                        if (logread) Console.WriteLine("READ UNSUPPORTED TYPE: " + appname + " " + entry.opc_path + " " + stype);
                                         break;
                                 }
                             }
@@ -721,14 +718,14 @@ namespace OPC2PowerBI
                 catch (Exception e)
                 {
                     // EXCEPTION HANDLER
-                    Console.WriteLine("Exception UA " + URI);
+                    Console.WriteLine("Exception UA " + appname);
                     Console.WriteLine(e);
                     System.Threading.Thread.Sleep(15000);
                 }
             } while (true);
         }
 
-        static void ProcessDa(String URI, List<OPC_entry> entries, int readperiod)
+        static void ProcessDa(String URI, List<OPC_entry> entries, int readperiod, string appname)
         {
             CultureInfo ci = new CultureInfo("en-US");
             Thread.CurrentThread.CurrentCulture = ci;
@@ -775,7 +772,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + sval);
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + sval);
                                         });
                                     }
                                     break;
@@ -796,7 +793,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value.ToString("G", CultureInfo.CreateSpecificCulture("en-US")));
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value.ToString("G", CultureInfo.CreateSpecificCulture("en-US")));
                                         });
                                     }
                                     break;
@@ -818,7 +815,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value.ToString("G", CultureInfo.CreateSpecificCulture("en-US")));
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value.ToString("G", CultureInfo.CreateSpecificCulture("en-US")));
                                         });
                                     }
                                     break;
@@ -839,7 +836,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
                                         });
                                     }
                                     break;
@@ -860,7 +857,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
                                         });
                                     }
                                     break;
@@ -883,7 +880,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
                                         });
                                     }
                                     break;
@@ -913,7 +910,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value);
                                         });
                                     }
                                     break;
@@ -935,7 +932,7 @@ namespace OPC2PowerBI
                                                 quality = readEvent.Quality
                                             };
                                             MapValues[entry.tag] = ov;
-                                            if (logevent) Console.WriteLine("EVENT " + URI + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value.ToString());
+                                            if (logevent) Console.WriteLine("EVENT " + appname + " " + entry.opc_path + " " + entry.tag + " " + readEvent.Value.ToString());
                                         });
                                     }
                                     break;
@@ -974,7 +971,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "vt_r4":
@@ -991,7 +988,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "vt_r8":
@@ -1009,7 +1006,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "vt_i1":
@@ -1027,7 +1024,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "vt_i2":
@@ -1045,7 +1042,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "state":
@@ -1065,7 +1062,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "string":
@@ -1090,7 +1087,7 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     case "vt_date":
@@ -1110,11 +1107,11 @@ namespace OPC2PowerBI
                                             ov.serverTimestamp = task.Result.ServerTimestamp;
                                             ov.quality = task.Result.Quality;
                                             MapValues[entry.tag] = ov;
-                                            if (logread) Console.WriteLine("READ  " + URI + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
+                                            if (logread) Console.WriteLine("READ  " + appname + " " + entry.opc_path + " " + entry.tag + " " + ov.string_value);
                                         }
                                         break;
                                     default:
-                                        if (logread) Console.WriteLine("READ UNSUPPORTED TYPE: " + URI + " " + entry.opc_path + " " + stype);
+                                        if (logread) Console.WriteLine("READ UNSUPPORTED TYPE: " + appname + " " + entry.opc_path + " " + stype);
                                         break;
                                 }
 
@@ -1128,7 +1125,7 @@ namespace OPC2PowerBI
                 catch (Exception e)
                 {
                     // EXCEPTION HANDLER
-                    Console.WriteLine("Exception DA " + URI);
+                    Console.WriteLine("Exception DA " + appname);
                     Console.WriteLine(e.ToString().Substring(0, e.ToString().IndexOf(Environment.NewLine)));
                     System.Threading.Thread.Sleep(3000);
                 }
@@ -1434,7 +1431,7 @@ namespace OPC2PowerBI
                 }
                 else
                 {
-                    Thread t = new Thread(() => ProcessDa(srv.opc_url, srv.entries, srv.read_period));
+                    Thread t = new Thread(() => ProcessDa(srv.opc_url, srv.entries, srv.read_period, srv.opc_server_name));
                     t.Start();
                 }
             }
