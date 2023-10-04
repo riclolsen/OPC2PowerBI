@@ -10,9 +10,13 @@ Data refreshs must be forced manually. As far as I know OData data source does n
 
 The code is written in C# and it uses the h-OPC library for C#.
 
-_Warning: The h-opc library is unmantained legacy and is known to have problems to enable OPC connections using certificates_.
+To provide user/password credentials for the connection, format the server URL as below.
 
-Requires the .NET 6.0 runtime.
+    opc.tcp://user:password@127.0.0.1:53530/OPCUA/SimulationServer
+
+_Warning: The h-opc library is unmaintained legacy and is known to have problems to enable OPC connections using certificates_.
+
+Version 0.5 requires the .NET 6.0 runtime.
 
 Executable binaries are available for download in the Releases section.
 
