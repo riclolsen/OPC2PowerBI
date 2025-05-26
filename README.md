@@ -16,7 +16,7 @@ To provide user/password credentials for the connection, format the server URL a
 
 _Warning: The h-opc library is unmaintained legacy and is known to have problems to enable OPC connections using certificates_.
 
-Version 0.5 requires the .NET 6.0 runtime.
+Version 0.6 requires the .NET 8.0 runtime.
 
 Executable binaries are available for download in the Releases section.
 
@@ -28,6 +28,10 @@ Example of config file:
     #port service_name
     8080, odata
 	
+	# Optional URL to push data to a Power BI streaming dataset, see https://learn.microsoft.com/pt-br/power-bi/connect-data/service-real-time-streaming
+	# All acquired data tags should be configured in Power BI as number, string or datetime data types.
+	#powerbistreamingurl=https://api.powerbi.com/beta/...
+
 	# OPC SERVERS
 
 	#  OPC_UA_URL,                   READ_INTERVAL_IN_SECONDS,  SERVER_NAME, CERTIFICATE_FILE_PATH, CERTIFICATE_PASSWORD
